@@ -2,7 +2,6 @@ package com.konex.prueba_tecnica.dto.request;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.math.BigDecimal;
 
 public class CrearBilletesRequest {
     private List<BilleteDTO> billetes;

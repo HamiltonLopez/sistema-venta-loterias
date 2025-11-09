@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.konex.prueba_tecnica.dto.request.CrearBilletesRequest;
 import com.konex.prueba_tecnica.dto.request.CrearSorteoRequest;
+import com.konex.prueba_tecnica.dto.response.BilleteResponse;
 import com.konex.prueba_tecnica.dto.response.SorteoResponse;
 import com.konex.prueba_tecnica.service.BilleteService;
 import com.konex.prueba_tecnica.service.SorteoService;
@@ -44,7 +45,18 @@ public class SorteoController {
     }
 
     @GetMapping
-    public List<?> listar() {
+    public List<SorteoResponse> listar() {
         return sorteoService.listar();
     }
+
+    @GetMapping("/{id}")
+    public SorteoResponse obtenerPorId(@PathVariable Long id) {
+        return sorteoService.obtenerPorId(id);
+    }
+
+    @GetMapping("/{id}/billetes")
+    public List<BilleteResponse> listarBilletes(@PathVariable Long id) {
+        return billeteService.listarPorSorteo(id);
+    }
+
 }

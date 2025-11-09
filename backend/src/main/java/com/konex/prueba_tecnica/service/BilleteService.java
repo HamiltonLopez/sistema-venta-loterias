@@ -5,10 +5,12 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.konex.prueba_tecnica.dto.request.CrearBilletesRequest;
+import com.konex.prueba_tecnica.dto.response.BilleteResponse;
 import com.konex.prueba_tecnica.entity.Billete;
 import com.konex.prueba_tecnica.entity.Cliente;
 import com.konex.prueba_tecnica.entity.EstadoBillete;
 import com.konex.prueba_tecnica.entity.Sorteo;
+import com.konex.prueba_tecnica.mapper.BilleteMapper;
 import com.konex.prueba_tecnica.repository.BilleteRepository;
 import com.konex.prueba_tecnica.repository.ClienteRepository;
 import com.konex.prueba_tecnica.repository.SorteoRepository;
@@ -21,11 +23,13 @@ public class BilleteService {
     private final BilleteRepository billeteRepo;
     private final ClienteRepository clienteRepo;
     private final SorteoRepository sorteoRepo;
+    private final BilleteMapper billeteMapper;
 
-    public BilleteService(BilleteRepository billeteRepo, ClienteRepository clienteRepo, SorteoRepository sorteoRepo) {
+    public BilleteService(BilleteRepository billeteRepo, ClienteRepository clienteRepo, SorteoRepository sorteoRepo, BilleteMapper billeteMapper) {
         this.billeteRepo = billeteRepo;
         this.clienteRepo = clienteRepo;
         this.sorteoRepo = sorteoRepo;
+        this.billeteMapper = billeteMapper;
     }
 
     @Transactional
@@ -64,6 +68,15 @@ public class BilleteService {
 
     public List<Billete> billetesPorCliente(Long clienteId) {
         return billeteRepo.findByClienteId(clienteId);
+    }
+
+    public List<BilleteResponse> listarPorSorteo(Long sorteoId) {
+        sorteoRepo.findById(sorteoId)
+                .orElseThrow(() -> new IllegalArgumentException("Sorteo no existe"));
+        return billeteRepo.findBySorteoId(sorteoId)
+                .stream()
+                .map(billeteMapper::toResponse)
+                .toList();
     }
 
 }

@@ -13,4 +13,6 @@ public interface BilleteRepository extends JpaRepository<Billete, Long> {
     List<Billete> findBySorteoIdAndEstado(Long sorteoId, EstadoBillete estado);
 
     List<Billete> findByClienteId(Long clienteId);
+
+    List<Billete> findBySorteoId(Long sorteoId);
 }
