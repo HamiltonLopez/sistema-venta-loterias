@@ -4,35 +4,20 @@
   padding-top: 24px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
-/* Encabezado con el botón */
 .header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
+  align-items: center;
+  margin-bottom: 24px;
 }
 
-/* Botón mejorado */
 .btn-crear {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 0 18px;
-  font-weight: 500;
-  border-radius: 8px;
-  transition: all 0.25s ease-in-out;
-  background-color: #1976d2;
-  color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.btn-crear:hover {
-  background-color: #1565c0;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+  gap: 8px;
 }
 
 /* Tarjetas */

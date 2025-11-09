@@ -48,6 +48,7 @@ export class SorteoCreateComponent {
     };
 
     this.sorteoService.crear(data).subscribe(() => {
+      this.sorteoService.notificarRecarga();
       this.router.navigate(['/sorteos']);
     });
   }

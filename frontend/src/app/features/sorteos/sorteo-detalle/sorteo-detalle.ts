@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, inject } from '@angular/core';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
+import { filter, Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormArray, FormGroup, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
 import { SorteoService, Sorteo } from '../../../core/services/sorteo.service';
@@ -11,7 +12,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 @Component({
   selector: 'app-sorteo-detalle',
   standalone: true,
@@ -29,7 +29,7 @@ import { Router } from '@angular/router';
   templateUrl: './sorteo-detalle.html',
   styleUrls: ['./sorteo-detalle.scss']
 })
-export class SorteoDetalleComponent implements OnInit {
+export class SorteoDetalleComponent implements OnInit, OnDestroy {
 
   sorteo: Sorteo | undefined;
   form!: FormGroup;
@@ -38,6 +38,9 @@ export class SorteoDetalleComponent implements OnInit {
   mostrarDialogoVenta: boolean = false;
   billeteSeleccionado: any = null;
   clienteSeleccionado: number | null = null;
+  private routerSubscription?: Subscription;
+  private routeSubscription?: Subscription;
+  private cdr = inject(ChangeDetectorRef);
 
   constructor(
     private route: ActivatedRoute,
@@ -45,31 +48,47 @@ export class SorteoDetalleComponent implements OnInit {
     private billeteService: BilleteService,
     private clienteService: ClienteService,
     private fb: FormBuilder,
-    private router: Router 
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
     this.form = this.fb.group({
       billetes: this.fb.array([
         this.fb.group({ numero: ['', Validators.required], precio: ['', Validators.required] })
       ])
     });
 
-    this.cargarSorteo(id);
-    this.cargarBilletes(id);
+    this.routeSubscription = this.route.paramMap.subscribe(params => {
+      const id = Number(params.get('id'));
+      if (id) {
+        this.cargarSorteo(id);
+        this.cargarBilletes(id);
+      }
+    });
+
     this.cargarClientes();
+  }
+
+  ngOnDestroy(): void {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
+    if (this.routeSubscription) {
+      this.routeSubscription.unsubscribe();
+    }
   }
 
   cargarSorteo(id: number): void {
     this.sorteoService.obtenerPorId(id).subscribe((data) => {
       this.sorteo = data;
+      this.cdr.detectChanges();
     });
   }
 
   cargarBilletes(id: number): void {
     this.billeteService.listarPorSorteo(id).subscribe((data) => {
       this.billetesExistentes = data;
+      this.cdr.detectChanges();
     });
   }
 
@@ -88,6 +107,7 @@ export class SorteoDetalleComponent implements OnInit {
   cargarClientes(): void {
     this.clienteService.listar().subscribe((data) => {
       this.clientes = data;
+      this.cdr.detectChanges();
     });
   }
 

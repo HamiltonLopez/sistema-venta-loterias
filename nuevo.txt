@@ -1,0 +1,53 @@
+PRUEBA TÉCNICA EQUIPO DESARROLLO
+
+
+
+
+
+
+
+Caso de Prueba Técnica – Sistema de Ventas de Lotería 
+1. Objetivo: 
+Evaluar las habilidades del candidato en desarrollo full stack mediante la creación  de una aplicación web para gestionar la venta de billetes de lotería. Se busca validar  conocimientos en Java + Spring Boot para el backend y Angular para el frontend. 
+2. Contexto 
+Una empresa de juegos de azar desea implementar un sistema básico para la  venta de billetes de lotería. El sistema debe permitir registrar sorteos, vender billetes,  asociarlos a clientes, y consultar el historial de ventas. 
+3. Requisitos Funcionales 
+3.1 Backend (Java + Spring Boot) 
+- Crear una API REST con las siguientes entidades: 
+- Sorteo: id, nombre del sorteo, fecha del sorteo 
+- Billete: id, número, precio, estado (disponible, vendido) 
+- Cliente: id, nombre, correo electrónico 
+- Endpoints requeridos: 
+- Crear y listar sorteos 
+- Crear billetes asociados a un sorteo 
+- Registrar clientes 
+- Vender billetes (asociar billete a cliente y cambiar estado) 
+- Consultar billetes vendidos por cliente 
+- Persistencia en base de datos (puede ser H2 en memoria) 
+3.2 Frontend (Angular) 
+- Crear una interfaz que permita: 
+- Listar sorteos y ver sus billetes disponibles 
+- Registrar clientes 
+- Vender billetes desde la vista del sorteo
+- Ver el historial de billetes vendidos por cliente 
+4. Tiempo estimado 
+- Duración máxima: 2 días calendario 
+- Se espera una solución funcional, aunque no necesariamente con diseño visual  avanzado 
+5. Criterios de Evaluación 
+- Correcta implementación de la lógica de negocio 
+- Buenas prácticas de desarrollo (estructura, claridad, separación de capas) - Uso adecuado de frameworks (Spring Boot, Angular) 
+- Documentación mínima para ejecutar el proyecto (README) 
+- Bonus: uso de Git, pruebas unitarias, manejo de errores 
+6. Entregables requeridos para la prueba técnica 
+6.1 Código fuente completo 
+• Proyecto backend en Java + Spring Boot 
+• Proyecto frontend en Angular 
+• Estructurado en carpetas separadas o repositorios independientes. 6.2 Base de datos 
+• Script de creación de tablas y datos de ejemplo 
+6.3 Capturas de pantalla o video corto (opcional pero recomendado) • Demostración de la aplicación funcionando 
+• Muestra de vistas clave: listado de sorteos, venta de billetes, historial por  cliente 
+6.4 Repositorio en Git (si aplica) 
+• Enlace al repositorio (GitHub, GitLab, Bitbucket) 
+• Buen uso de commits y mensajes claros
+Av Calle 26 No,69D - 91 Torre Dorado Centro Empresarial Arrecife oficina 603, Bogotá, Colombia 601 2953964 admon@konexinnovation.com.co www.konexinnovation.com Konex Innovation 
+
