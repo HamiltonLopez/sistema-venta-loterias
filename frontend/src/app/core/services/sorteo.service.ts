@@ -17,8 +17,13 @@ export class SorteoService {
   listar(): Observable<Sorteo[]> {
     return this.http.get<Sorteo[]>(this.api);
   }
+
+  obtenerPorId(id: number): Observable<Sorteo> {
+    return this.http.get<Sorteo>(`${this.api}/${id}`);
+  }
+
   crear(data: { nombre: string; fecha: string }) {
-  return this.http.post(this.api, data);
-}
+    return this.http.post(this.api, data);
+  }
 
 }
