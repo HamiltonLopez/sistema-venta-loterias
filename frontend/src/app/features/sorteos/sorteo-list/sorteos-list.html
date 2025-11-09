@@ -1,12 +1,23 @@
 <div class="container">
-  <h1>Lista de Sorteos</h1>
 
-  <button mat-raised-button color="primary" routerLink="/sorteos/crear">
-    + Crear Sorteo
-  </button>
+  <div class="header">
+    <h1>Lista de Sorteos</h1>
 
-  <mat-card *ngFor="let s of sorteos" class="card">
-    <mat-card-title>{{ s.nombre }}</mat-card-title>
-    <mat-card-subtitle>{{ s.fecha }}</mat-card-subtitle>
-  </mat-card>
+    <button mat-flat-button color="primary" routerLink="/sorteos/crear" class="btn-crear">
+      <mat-icon>add_circle_outline</mat-icon>
+      <span>Nuevo sorteo</span>
+    </button>
+  </div>
+
+  <a 
+    *ngFor="let s of sorteos" 
+    [routerLink]="['/sorteos', s.id]" 
+    class="card-link"
+  >
+    <mat-card class="card">
+      <mat-card-title>{{ s.nombre }}</mat-card-title>
+      <mat-card-subtitle>{{ s.fecha }}</mat-card-subtitle>
+    </mat-card>
+  </a>
+
 </div>

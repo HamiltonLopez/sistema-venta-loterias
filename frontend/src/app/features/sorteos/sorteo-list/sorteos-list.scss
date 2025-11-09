@@ -1,15 +1,52 @@
 .container {
   width: 80%;
-  margin: 20px auto;
+  margin: auto;
+  padding-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Encabezado con el botón */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+/* Botón mejorado */
+.btn-crear {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 18px;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.25s ease-in-out;
+  background-color: #1976d2;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn-crear:hover {
+  background-color: #1565c0;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+}
+
+/* Tarjetas */
+.card-link {
+  text-decoration: none;
 }
 
 .card {
   margin-top: 12px;
-  padding: 10px;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .card:hover {
   transform: scale(1.02);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
