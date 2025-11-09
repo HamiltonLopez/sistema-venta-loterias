@@ -1,0 +1,12 @@
+<div class="container">
+  <h1>Lista de Sorteos</h1>
+
+  <button mat-raised-button color="primary" routerLink="/sorteos/crear">
+    + Crear Sorteo
+  </button>
+
+  <mat-card *ngFor="let s of sorteos" class="card">
+    <mat-card-title>{{ s.nombre }}</mat-card-title>
+    <mat-card-subtitle>{{ s.fecha }}</mat-card-subtitle>
+  </mat-card>
+</div>
