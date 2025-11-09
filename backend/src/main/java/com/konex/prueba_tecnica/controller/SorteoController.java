@@ -1,6 +1,8 @@
 package com.konex.prueba_tecnica.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.konex.prueba_tecnica.dto.request.CrearBilletesRequest;
 import com.konex.prueba_tecnica.dto.request.CrearSorteoRequest;
+import com.konex.prueba_tecnica.dto.request.GenerarBilletesRequest;
 import com.konex.prueba_tecnica.dto.response.BilleteResponse;
 import com.konex.prueba_tecnica.dto.response.SorteoResponse;
 import com.konex.prueba_tecnica.service.BilleteService;
@@ -33,10 +36,31 @@ public class SorteoController {
     @PostMapping("/{id}/billetes")
     public ResponseEntity<?> crearBilletes(
             @PathVariable Long id,
-            @RequestBody CrearBilletesRequest request) {
+            @Valid @RequestBody CrearBilletesRequest request) {
 
-        billeteService.crearBilletesParaSorteo(id, request);
-        return ResponseEntity.ok("Billetes creados correctamente");
+        try {
+            billeteService.crearBilletesParaSorteo(id, request);
+            return ResponseEntity.ok("Billetes creados correctamente");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/{id}/billetes/generar")
+    public ResponseEntity<?> generarBilletes(
+            @PathVariable Long id,
+            @Valid @RequestBody GenerarBilletesRequest request) {
+                
+                 Map<String, String> response = new HashMap<>();
+        try {
+            billeteService.generarBilletesAutomaticamente(id, request.getNumeroCifras(), request.getPrecio());
+            response.put("mensaje", "Billetes generados correctamente");
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.ok(e.getMessage());
+        }
     }
 
     @PostMapping

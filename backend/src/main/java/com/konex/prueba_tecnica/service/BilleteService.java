@@ -1,6 +1,8 @@
 package com.konex.prueba_tecnica.service;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -39,12 +41,59 @@ public class BilleteService {
                 .orElseThrow(() -> new IllegalArgumentException("Sorteo no existe"));
 
         for (CrearBilletesRequest.BilleteDTO dto : request.getBilletes()) {
+            boolean existe = billeteRepo.findBySorteoId(sorteoId)
+                    .stream()
+                    .anyMatch(b -> b.getNumero().equals(dto.getNumero()));
+            
+            if (existe) {
+                throw new IllegalArgumentException("Ya existe un billete con el número " + dto.getNumero() + " en este sorteo");
+            }
+
             Billete b = new Billete();
             b.setNumero(dto.getNumero());
             b.setPrecio(dto.getPrecio());
             b.setEstado(EstadoBillete.DISPONIBLE);
             b.setSorteo(sorteo);
             billeteRepo.save(b);
+        }
+    }
+
+    @Transactional
+    public void generarBilletesAutomaticamente(Long sorteoId, Integer numeroCifras, java.math.BigDecimal precio) {
+        Sorteo sorteo = sorteoRepo.findById(sorteoId)
+                .orElseThrow(() -> new IllegalArgumentException("Sorteo no existe"));
+
+        int min = 0;
+        int max = (int) Math.pow(10, numeroCifras) - 1;
+        
+        List<Billete> billetesExistentes = billeteRepo.findBySorteoId(sorteoId);
+        Set<String> numerosExistentes = billetesExistentes.stream()
+                .map(Billete::getNumero)
+                .collect(Collectors.toSet());
+
+        int creados = 0;
+        int duplicados = 0;
+
+        for (int i = min; i <= max; i++) {
+            String numero = String.format("%0" + numeroCifras + "d", i);
+            
+
+            if (numerosExistentes.contains(numero)) {
+                duplicados++;
+                continue;
+            }
+
+            Billete b = new Billete();
+            b.setNumero(numero);
+            b.setPrecio(precio);
+            b.setEstado(EstadoBillete.DISPONIBLE);
+            b.setSorteo(sorteo);
+            billeteRepo.save(b);
+            creados++;
+        }
+
+        if (duplicados > 0) {
+            throw new IllegalStateException("Se crearon " + creados + " billetes. " + duplicados + " números ya existían y se omitieron.");
         }
     }
 

@@ -1,7 +1,21 @@
+.container {
+  width: 90%;
+  margin: 0 auto;
+  padding-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
 .navbar {
   position: sticky;
   top: 0;
   z-index: 100;
+}
+.sistema {
+  margin: 0;
+  font-weight: bold;
+  font-size: 24px; 
+  margin-right: auto;
 }
 
 .title {

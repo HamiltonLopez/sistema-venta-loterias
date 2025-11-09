@@ -33,6 +33,7 @@ export class SorteoDetalleComponent implements OnInit, OnDestroy {
 
   sorteo: Sorteo | undefined;
   form!: FormGroup;
+  formGenerar!: FormGroup;
   billetesExistentes: any[] = [];
   clientes: Cliente[] = [];
   mostrarDialogoVenta: boolean = false;
@@ -56,6 +57,11 @@ export class SorteoDetalleComponent implements OnInit, OnDestroy {
       billetes: this.fb.array([
         this.fb.group({ numero: ['', Validators.required], precio: ['', Validators.required] })
       ])
+    });
+
+    this.formGenerar = this.fb.group({
+      numeroCifras: [3, [Validators.required, Validators.min(1), Validators.max(6)]],
+      precio: ['', [Validators.required, Validators.min(0.01)]]
     });
 
     this.routeSubscription = this.route.paramMap.subscribe(params => {
@@ -142,12 +148,52 @@ export class SorteoDetalleComponent implements OnInit, OnDestroy {
   guardar() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (this.form.invalid) return;
-    this.billeteService.crearBilletes(id, this.form.value.billetes).subscribe(() => {
-      alert('Billetes creados correctamente');
-      this.cargarBilletes(id);
-      this.form.reset();
-      this.billetes.clear();
-      this.billetes.push(this.fb.group({ numero: ['', Validators.required], precio: ['', Validators.required] }));
+    this.billeteService.crearBilletes(id, this.form.value.billetes).subscribe({
+      next: (response: any) => {
+        const mensaje = typeof response === 'string' ? response : 'Billetes creados correctamente';
+        alert(mensaje);
+        this.cargarBilletes(id);
+        this.form.reset();
+        this.billetes.clear();
+        this.billetes.push(this.fb.group({ numero: ['', Validators.required], precio: ['', Validators.required] }));
+      },
+      error: (error) => {
+        let mensaje = 'Error al crear billetes';
+        if (error.error) {
+          mensaje = typeof error.error === 'string' ? error.error : (error.error.message || error.error);
+        }
+        alert('Error: ' + mensaje);
+      }
+    });
+  }
+
+  generarBilletes() {
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    if (this.formGenerar.invalid) return;
+    
+    const numeroCifras = this.formGenerar.value.numeroCifras;
+    const precio = this.formGenerar.value.precio;
+    
+    const totalBilletes = Math.pow(10, numeroCifras);
+    if (!confirm(`¿Está seguro de generar ${totalBilletes} billetes?`)) {
+      return;
+    }
+
+    this.billeteService.generarBilletes(id, numeroCifras, precio).subscribe({
+      next: (response: any) => {
+        const mensaje = typeof response === 'string' ? response : 'Billetes generados correctamente';
+        alert(mensaje);
+        this.cargarBilletes(id);
+        this.formGenerar.reset();
+        this.formGenerar.patchValue({ numeroCifras: 3 });
+      },
+      error: (error) => {
+        let mensaje = 'Error al generar billetes';
+        if (error.error) {
+          mensaje = typeof error.error === 'string' ? error.error : (error.error.message || error.error);
+        }
+        alert('Error: ' + mensaje);
+      }
     });
   }
 

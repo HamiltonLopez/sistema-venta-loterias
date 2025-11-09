@@ -28,6 +28,7 @@
           <p><strong>Número:</strong> {{ billete.numero }}</p>
           <p><strong>Precio:</strong> ${{ billete.precio }}</p>
           <p><strong>Estado:</strong> {{ billete.estado === 'VENDIDO' ? 'Vendido' : billete.estado }}</p>
+          <p *ngIf="billete.sorteo"><strong>Sorteo:</strong> {{ billete.sorteo.nombre }} ({{ billete.sorteo.fecha }})</p>
         </div>
       </mat-card-content>
     </mat-card>

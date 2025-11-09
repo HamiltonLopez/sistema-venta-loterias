@@ -23,4 +23,11 @@ export class BilleteService {
   listarPorCliente(clienteId: number): Observable<any[]> {
     return this.http.get<any[]>(`/api/billetes/cliente/${clienteId}`);
   }
+
+  generarBilletes(sorteoId: number, numeroCifras: number, precio: number): Observable<any> {
+    return this.http.post(`/api/sorteos/${sorteoId}/billetes/generar`, { 
+      numeroCifras, 
+      precio 
+    });
+  }
 }
