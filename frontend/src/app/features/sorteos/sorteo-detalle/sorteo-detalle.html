@@ -1,0 +1,80 @@
+<div class="container">
+  <mat-card>
+    <h2>{{ sorteo?.nombre }}</h2>
+    <p>Fecha: {{ sorteo?.fecha }}</p>
+  </mat-card>
+
+  <h3>Billetes del Sorteo</h3>
+  <div *ngIf="billetesExistentes.length === 0" class="no-billetes">
+    <p>No hay billetes registrados para este sorteo.</p>
+  </div>
+  <div *ngIf="billetesExistentes.length > 0" class="billetes-list">
+    <mat-card *ngFor="let billete of billetesExistentes" class="billete-card">
+      <mat-card-content>
+        <div class="billete-info">
+          <p><strong>Número:</strong> {{ billete.numero }}</p>
+          <p><strong>Precio:</strong> ${{ billete.precio }}</p>
+          <p><strong>Estado:</strong> 
+            <span [class]="billete.estado === 'DISPONIBLE' ? 'disponible' : 'vendido'">
+              {{ billete.estado === 'DISPONIBLE' ? 'Disponible' : 'Vendido' }}
+            </span>
+          </p>
+        </div>
+        <button 
+          *ngIf="billete.estado === 'DISPONIBLE'" 
+          mat-raised-button 
+          color="primary" 
+          (click)="abrirDialogoVenta(billete)">
+          Vender
+        </button>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Diálogo de venta -->
+  <div *ngIf="mostrarDialogoVenta" class="dialog-overlay" (click)="cerrarDialogoVenta()">
+    <div class="dialog-content" (click)="$event.stopPropagation()">
+      <h3>Vender Billete</h3>
+      <p><strong>Número:</strong> {{ billeteSeleccionado?.numero }}</p>
+      <p><strong>Precio:</strong> ${{ billeteSeleccionado?.precio }}</p>
+      
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Seleccione un cliente</mat-label>
+        <mat-select [(ngModel)]="clienteSeleccionado">
+          <mat-option *ngFor="let cliente of clientes" [value]="cliente.id">
+            {{ cliente.nombre }} - {{ cliente.correo }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="dialog-actions">
+        <button mat-button (click)="cerrarDialogoVenta()">Cancelar</button>
+        <button mat-raised-button color="primary" (click)="venderBillete()">Vender</button>
+      </div>
+    </div>
+  </div>
+
+  <h3>Agregar Billetes</h3>
+
+  <form [formGroup]="form">
+    <div formArrayName="billetes">
+      <div *ngFor="let b of billetes.controls; let i = index" [formGroupName]="i" class="billete-row">
+        <mat-form-field>
+          <mat-label>Número</mat-label>
+          <input matInput formControlName="numero">
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Precio</mat-label>
+          <input matInput formControlName="precio" type="number">
+        </mat-form-field>
+
+        <button mat-button color="warn" type="button" (click)="eliminarFila(i)">Eliminar</button>
+      </div>
+    </div>
+
+    <button mat-button color="primary" type="button" (click)="agregarFila()">+ Agregar billete</button>
+
+    <button mat-raised-button color="accent" type="button" (click)="guardar()">Guardar billetes</button>
+  </form>
+</div>
