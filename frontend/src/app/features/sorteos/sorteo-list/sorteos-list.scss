@@ -21,17 +21,30 @@
 }
 
 /* Tarjetas */
-.card-link {
-  text-decoration: none;
-}
 
-.card {
-  margin-top: 12px;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.card:hover {
-  transform: scale(1.02);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-}
+.sorteos-list {
+    margin-top: 2rem;
+  }
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  .card-link {
+    text-decoration: none;
+  }
+  .card {
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .card:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    transform: translateY(-4px) scale(1.03);
+  }
+  a{
+    text-decoration: none;
+    color: inherit;
+  }
+.title {
+    font-size: 1.5rem;
+    font-weight: 300;
+  }

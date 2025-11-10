@@ -2,7 +2,14 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef, inject } from '@angula
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormArray, FormGroup, ReactiveFormsModule, FormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormArray,
+  FormGroup,
+  ReactiveFormsModule,
+  FormsModule,
+  Validators,
+} from '@angular/forms';
 import { SorteoService, Sorteo } from '../../../core/services/sorteo.service';
 import { BilleteService } from '../../../core/services/billete.service';
 import { ClienteService, Cliente } from '../../../core/services/cliente.service';
@@ -24,13 +31,12 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatDialogModule
+    MatDialogModule,
   ],
   templateUrl: './sorteo-detalle.html',
-  styleUrls: ['./sorteo-detalle.scss']
+  styleUrls: ['./sorteo-detalle.scss'],
 })
 export class SorteoDetalleComponent implements OnInit, OnDestroy {
-
   sorteo: Sorteo | undefined;
   form!: FormGroup;
   formGenerar!: FormGroup;
@@ -55,16 +61,16 @@ export class SorteoDetalleComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.form = this.fb.group({
       billetes: this.fb.array([
-        this.fb.group({ numero: ['', Validators.required], precio: ['', Validators.required] })
-      ])
+        this.fb.group({ numero: ['', Validators.required], precio: ['', Validators.required] }),
+      ]),
     });
 
     this.formGenerar = this.fb.group({
       numeroCifras: [3, [Validators.required, Validators.min(1), Validators.max(6)]],
-      precio: ['', [Validators.required, Validators.min(0.01)]]
+      precio: ['', [Validators.required, Validators.min(0.01)]],
     });
 
-    this.routeSubscription = this.route.paramMap.subscribe(params => {
+    this.routeSubscription = this.route.paramMap.subscribe((params) => {
       const id = Number(params.get('id'));
       if (id) {
         this.cargarSorteo(id);
@@ -103,7 +109,9 @@ export class SorteoDetalleComponent implements OnInit, OnDestroy {
   }
 
   agregarFila() {
-    this.billetes.push(this.fb.group({ numero: ['', Validators.required], precio: ['', Validators.required] }));
+    this.billetes.push(
+      this.fb.group({ numero: ['', Validators.required], precio: ['', Validators.required] })
+    );
   }
 
   eliminarFila(i: number) {
@@ -135,14 +143,17 @@ export class SorteoDetalleComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.billeteService.vender(this.billeteSeleccionado.id, this.clienteSeleccionado).subscribe(() => {
-      alert('Billete vendido correctamente');
-      const id = Number(this.route.snapshot.paramMap.get('id'));
-      this.cargarBilletes(id);
-      this.cerrarDialogoVenta();
-    }, (error) => {
-      alert('Error al vender el billete: ' + (error.error?.message || 'Error desconocido'));
-    });
+    this.billeteService.vender(this.billeteSeleccionado.id, this.clienteSeleccionado).subscribe(
+      () => {
+        alert('Billete vendido correctamente');
+        const id = Number(this.route.snapshot.paramMap.get('id'));
+        this.cargarBilletes(id);
+        this.cerrarDialogoVenta();
+      },
+      (error) => {
+        alert('Error al vender el billete: ' + (error.error?.message || 'Error desconocido'));
+      }
+    );
   }
 
   guardar() {
@@ -155,25 +166,28 @@ export class SorteoDetalleComponent implements OnInit, OnDestroy {
         this.cargarBilletes(id);
         this.form.reset();
         this.billetes.clear();
-        this.billetes.push(this.fb.group({ numero: ['', Validators.required], precio: ['', Validators.required] }));
+        this.billetes.push(
+          this.fb.group({ numero: ['', Validators.required], precio: ['', Validators.required] })
+        );
       },
       error: (error) => {
         let mensaje = 'Error al crear billetes';
         if (error.error) {
-          mensaje = typeof error.error === 'string' ? error.error : (error.error.message || error.error);
+          mensaje =
+            typeof error.error === 'string' ? error.error : error.error.message || error.error;
         }
         alert('Error: ' + mensaje);
-      }
+      },
     });
   }
 
   generarBilletes() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (this.formGenerar.invalid) return;
-    
+
     const numeroCifras = this.formGenerar.value.numeroCifras;
     const precio = this.formGenerar.value.precio;
-    
+
     const totalBilletes = Math.pow(10, numeroCifras);
     if (!confirm(`¿Está seguro de generar ${totalBilletes} billetes?`)) {
       return;
@@ -181,20 +195,25 @@ export class SorteoDetalleComponent implements OnInit, OnDestroy {
 
     this.billeteService.generarBilletes(id, numeroCifras, precio).subscribe({
       next: (response: any) => {
-        const mensaje = typeof response === 'string' ? response : 'Billetes generados correctamente';
+        const mensaje =
+          typeof response === 'string' ? response : 'Billetes generados correctamente';
         alert(mensaje);
         this.cargarBilletes(id);
         this.formGenerar.reset();
         this.formGenerar.patchValue({ numeroCifras: 3 });
       },
       error: (error) => {
-        let mensaje = 'Error al generar billetes';
-        if (error.error) {
-          mensaje = typeof error.error === 'string' ? error.error : (error.error.message || error.error);
+        if (error.status === 409) {
+          alert('⚠️ ' + error.error.error);
+        } else {
+          let mensaje = 'Error al generar billetes';
+          if (error.error) {
+            mensaje =
+              typeof error.error === 'string' ? error.error : error.error.message || error.error;
+          }
+          alert('Error: ' + mensaje);
         }
-        alert('Error: ' + mensaje);
-      }
+      },
     });
   }
-
 }
