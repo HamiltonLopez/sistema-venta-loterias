@@ -1,0 +1,37 @@
+<div class="container">
+  <div class="header">
+    <h2>HISTORIAL DE BILLETES POR CLIENTE</h2>
+    <button mat-flat-button color="primary" routerLink="/clientes/crear" class="btn-crear">
+      <mat-icon>add_circle_outline</mat-icon>
+      <span>Nuevo cliente</span>
+    </button>
+  </div>
+
+  <mat-form-field appearance="outline" class="full">
+    <mat-label>Seleccione un cliente</mat-label>
+    <mat-select [(ngModel)]="clienteSeleccionado" (selectionChange)="onClienteChange()">
+      <mat-option [value]="null">-- Seleccione un cliente --</mat-option>
+      <mat-option *ngFor="let cliente of clientes" [value]="cliente.id">
+        {{ cliente.nombre }} - {{ cliente.correo }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div *ngIf="clienteSeleccionado && billetes.length === 0" class="no-billetes">
+    <p>Este cliente no tiene billetes vendidos.</p>
+  </div>
+
+  <div *ngIf="billetes.length > 0" class="billetes-list">
+    <mat-card *ngFor="let billete of billetes" class="billete-card">
+      <mat-card-content>
+        <div class="billete-info">
+          <p><strong>Número:</strong> {{ billete.numero }}</p>
+          <p><strong>Precio:</strong> ${{ billete.precio }}</p>
+          <p><strong>Estado:</strong> {{ billete.estado === 'VENDIDO' ? 'Vendido' : billete.estado }}</p>
+          <p *ngIf="billete.sorteo"><strong>Sorteo:</strong> {{ billete.sorteo.nombre }} ({{ billete.sorteo.fecha }})</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
