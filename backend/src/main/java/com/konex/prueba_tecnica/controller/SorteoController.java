@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,10 +38,11 @@ public class SorteoController {
     public ResponseEntity<?> crearBilletes(
             @PathVariable Long id,
             @Valid @RequestBody CrearBilletesRequest request) {
-
+Map<String, String> response = new HashMap<>();
         try {
             billeteService.crearBilletesParaSorteo(id, request);
-            return ResponseEntity.ok("Billetes creados correctamente");
+            response.put("mensaje", "Billetes creados correctamente");
+            return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -57,9 +59,11 @@ public class SorteoController {
             response.put("mensaje", "Billetes generados correctamente");
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            response.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
         } catch (IllegalStateException e) {
-            return ResponseEntity.ok(e.getMessage());
+            response.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
         }
     }
 
