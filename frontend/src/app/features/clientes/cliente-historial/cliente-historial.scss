@@ -1,0 +1,52 @@
+.container {
+  width: 80%;
+  margin: auto;
+  padding-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.btn-crear {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.full {
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.billetes-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.billete-card {
+  mat-card-content {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.billete-info {
+  p {
+    margin: 8px 0;
+  }
+}
+
+.no-billetes {
+  text-align: center;
+  padding: 24px;
+  color: #666;
+}
+

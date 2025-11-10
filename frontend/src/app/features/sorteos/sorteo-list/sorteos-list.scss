@@ -1,0 +1,50 @@
+.container {
+  width: 80%;
+  margin: auto;
+  padding-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.btn-crear {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Tarjetas */
+
+.sorteos-list {
+    margin-top: 2rem;
+  }
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  .card-link {
+    text-decoration: none;
+  }
+  .card {
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .card:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    transform: translateY(-4px) scale(1.03);
+  }
+  a{
+    text-decoration: none;
+    color: inherit;
+  }
+.title {
+    font-size: 1.5rem;
+    font-weight: 300;
+  }
